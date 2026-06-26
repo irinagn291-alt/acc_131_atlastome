@@ -55,7 +55,7 @@ struct BeaconScanView: View {
             .navigationDestination(for: AtlasVolumePreview.self) { preview in
                 VolumeDetailView(preview: preview)
             }
-            .onAppear { permission = AVCaptureDevice.authorizationStatus(for: .video) }
+            .onAppear { refreshCameraPermission(requestIfNeeded: true) }
         }
     }
 
@@ -64,19 +64,32 @@ struct BeaconScanView: View {
         switch permission {
         case .authorized: EmptyView()
         case .notDetermined:
-            Button("Enable camera") {
-                AVCaptureDevice.requestAccess(for: .video) { _ in
-                    DispatchQueue.main.async {
-                        permission = AVCaptureDevice.authorizationStatus(for: .video)
-                    }
-                }
-            }
-            .buttonStyle(.borderedProminent)
-        case .denied, .restricted:
-            Text("Camera access is off. Enter ISBN coordinates manually.")
+            Text("Allow camera access when prompted to scan barcodes.")
                 .font(.footnote)
                 .foregroundStyle(AtlasPalette.text.opacity(0.7))
+        case .denied, .restricted:
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Camera access is off. Enter ISBN coordinates manually.")
+                    .font(.footnote)
+                    .foregroundStyle(AtlasPalette.text.opacity(0.7))
+                Button("Open Settings") {
+                    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                    UIApplication.shared.open(url)
+                }
+                .font(.footnote.weight(.semibold))
+            }
         @unknown default: EmptyView()
+        }
+    }
+
+    private func refreshCameraPermission(requestIfNeeded: Bool) {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        permission = status
+        guard requestIfNeeded, status == .notDetermined else { return }
+        AVCaptureDevice.requestAccess(for: .video) { _ in
+            DispatchQueue.main.async {
+                permission = AVCaptureDevice.authorizationStatus(for: .video)
+            }
         }
     }
 
