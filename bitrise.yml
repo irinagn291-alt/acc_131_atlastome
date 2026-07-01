@@ -32,6 +32,16 @@ workflows:
     steps:
     - git-clone@8: {}
     - script@1:
+        title: Git LFS pull
+        inputs:
+        - content: |
+            #!/bin/bash
+            set -euo pipefail
+            if [[ -f .gitattributes ]] && command -v git-lfs >/dev/null 2>&1; then
+              git lfs install
+              git lfs pull
+            fi
+    - script@1:
         title: Prepare ASC key (.p8), modern .p12, relax pbxproj signing for App Store archive
         inputs:
         - content: |
