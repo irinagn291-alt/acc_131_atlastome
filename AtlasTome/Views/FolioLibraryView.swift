@@ -13,7 +13,7 @@ struct FolioLibraryView: View {
                 if volumes.isEmpty {
                     emptyFolio
                 } else {
-                    ScrollView {
+                    AtlasTabScroll {
                         LazyVStack(alignment: .leading, spacing: 20) {
                             Text("Expedition folio")
                                 .font(AtlasPalette.chartTitle(.title3))
@@ -29,11 +29,13 @@ struct FolioLibraryView: View {
                     }
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationBarHidden(true)
             .navigationDestination(for: AtlasVolumePreview.self) { preview in
                 VolumeDetailView(preview: preview)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var emptyFolio: some View {

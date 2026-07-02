@@ -63,6 +63,7 @@ struct MeridianSearchView: View {
                     VolumeDetailView(preview: preview)
                 }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
@@ -77,7 +78,7 @@ struct MeridianResultsHost: View {
         ZStack {
             AtlasPalette.meridianGradient.ignoresSafeArea()
             GridBackdrop().opacity(0.15)
-            ScrollView {
+            AtlasTabScroll {
                 VStack(alignment: .leading, spacing: 14) {
                     if lockedMode == nil {
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -109,6 +110,7 @@ struct MeridianResultsHost: View {
                 .padding(.vertical, 8)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             if let lockedMode { viewModel.mode = lockedMode }
             if let initialQuery {

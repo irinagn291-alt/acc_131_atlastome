@@ -14,7 +14,7 @@ struct ChartDiscoveryView: View {
             ZStack {
                 AtlasPalette.background.ignoresSafeArea()
                 GridBackdrop().opacity(0.2)
-                ScrollView {
+                AtlasTabScroll {
                     VStack(alignment: .leading, spacing: 18) {
                         chartHeader
                         MeridianBanner(text: "Discover")
@@ -38,6 +38,7 @@ struct ChartDiscoveryView: View {
                     .padding(.vertical, 12)
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationBarHidden(true)
             .navigationDestination(for: AtlasVolumePreview.self) { preview in
                 VolumeDetailView(preview: preview)
@@ -47,6 +48,7 @@ struct ChartDiscoveryView: View {
             }
             .task { await load() }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var chartHeader: some View {

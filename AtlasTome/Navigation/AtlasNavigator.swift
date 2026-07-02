@@ -30,7 +30,6 @@ enum AtlasChartSection: String, CaseIterable, Identifiable {
 
 struct AtlasNavigator: View {
     @State private var active: AtlasChartSection = .chart
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ZStack {
@@ -38,17 +37,18 @@ struct AtlasNavigator: View {
             TopographicBackdrop().opacity(0.35)
             VStack(spacing: 0) {
                 atlasHeader
-                sectionHost
+                GeometryReader { geo in
+                    sectionHost
+                        .frame(width: geo.size.width, height: geo.size.height)
+                }
+                ExpeditionDock(active: $active)
             }
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            ExpeditionDock(active: $active)
         }
     }
 
     private var atlasHeader: some View {
-        HStack(spacing: 14) {
-            VStack(alignment: .leading, spacing: 4) {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
                     Image(systemName: "location.north.line.fill")
                         .font(.caption2.weight(.bold))
@@ -59,18 +59,18 @@ struct AtlasNavigator: View {
                         .foregroundStyle(AtlasPalette.secondary)
                 }
                 Text(active.title)
-                    .font(AtlasPalette.chartTitle(.title2))
+                    .font(AtlasPalette.chartTitle(.title3))
                     .foregroundStyle(AtlasPalette.text)
                 Text(coordinateLabel)
                     .font(.system(.caption2, design: .monospaced))
                     .foregroundStyle(AtlasPalette.accent.opacity(0.85))
             }
-            Spacer()
+            Spacer(minLength: 8)
             CompassRoseIndicator(spokes: 8, accent: AtlasPalette.accent)
-                .frame(width: 44, height: 44)
+                .frame(width: 36, height: 36)
         }
         .padding(.horizontal, 18)
-        .padding(.vertical, 14)
+        .padding(.vertical, 10)
         .background(
             AtlasPalette.surface
                 .shadow(color: AtlasPalette.text.opacity(0.06), radius: 8, y: 4)
@@ -136,7 +136,6 @@ struct ExpeditionDock: View {
             AtlasPalette.surface
                 .overlay(Rectangle().frame(height: 1).foregroundStyle(AtlasPalette.gridStroke), alignment: .top)
                 .shadow(color: AtlasPalette.text.opacity(0.08), radius: 12, y: -4)
-                .ignoresSafeArea(edges: .bottom)
         )
     }
 }

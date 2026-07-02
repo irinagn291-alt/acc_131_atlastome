@@ -35,14 +35,17 @@ struct WaypointPlanView: View {
                     }
                     .scrollContentBackground(.hidden)
                     .listStyle(.insetGrouped)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationBarHidden(true)
             .environment(\.editMode, $editMode)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) { EditButton() }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func waypointRow(_ volume: ExpeditionVolume) -> some View {

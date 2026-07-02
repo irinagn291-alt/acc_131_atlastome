@@ -11,7 +11,7 @@ struct BeaconScanView: View {
         NavigationStack(path: $path) {
             ZStack {
                 AtlasPalette.background.ignoresSafeArea()
-                ScrollView {
+                AtlasTabScroll {
                     VStack(alignment: .leading, spacing: 18) {
                         Text("Activate beacon")
                             .font(AtlasPalette.chartTitle(.title2))
@@ -51,12 +51,14 @@ struct BeaconScanView: View {
                     .padding(18)
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationBarHidden(true)
             .navigationDestination(for: AtlasVolumePreview.self) { preview in
                 VolumeDetailView(preview: preview)
             }
             .onAppear { refreshCameraPermission(requestIfNeeded: true) }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     @ViewBuilder

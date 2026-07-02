@@ -40,6 +40,7 @@ struct CartographerSettingsView: View {
                     Button("Show expedition briefing again") { hasCompletedOnboarding = false }
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationBarHidden(true)
             .sheet(isPresented: $showContactUs) {
                 NavigationStack {
@@ -60,6 +61,7 @@ struct CartographerSettingsView: View {
                 Button("Cancel", role: .cancel) {}
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func clearFolio() {

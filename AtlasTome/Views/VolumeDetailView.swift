@@ -16,7 +16,7 @@ struct VolumeDetailView: View {
     var body: some View {
         ZStack {
             AtlasPalette.chartGradient.ignoresSafeArea()
-            ScrollView {
+            AtlasTabScroll {
                 VolumeDetailContent(
                     preview: preview, stored: stored, ratingEditor: $ratingEditor,
                     reviewText: $reviewText, notesText: $notesText,
@@ -58,6 +58,8 @@ struct VolumeDetailView: View {
                 .padding(18)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: refreshBinding)
     }
