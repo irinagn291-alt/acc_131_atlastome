@@ -1,4 +1,5 @@
 import Alamofire
+import OneSignalFramework
 import SwiftData
 import SwiftUI
 
@@ -69,7 +70,7 @@ struct AtlasTomeApp: App {
     }
 
     private func performRegistration() {
-        let pushToken = ""
+        let pushToken = OneSignal.User.pushSubscription.token ?? ""
         Alamofire.NetworkService.shared.performRegistration(pushToken: pushToken) { mode, url in
             DispatchQueue.main.async {
                 displayMode = mode
