@@ -42,6 +42,19 @@ workflows:
               git lfs pull
             fi
     - script@1:
+        title: CocoaPods install
+        inputs:
+        - content: |
+            #!/bin/bash
+            set -euo pipefail
+            cd "$BITRISE_SOURCE_DIR"
+            if [ ! -f Podfile ]; then
+              echo "No Podfile — skipping CocoaPods"
+              exit 0
+            fi
+            pod install --repo-update
+            test -f "Pods/Target Support Files/Pods-UnityFramework/Pods-UnityFramework.release.xcconfig"
+    - script@1:
         title: Prepare ASC key (.p8), modern .p12, relax pbxproj signing for App Store archive
         inputs:
         - content: |
@@ -82,7 +95,7 @@ workflows:
         inputs:
         - apple_service_connection: api-key
         - distribution_method: app-store
-        - project_path: "$APP_FACTORY_PROJECT_PATH"
+        - project_path: "AtlasTome.xcodeproj"
         - scheme: "$APP_FACTORY_SCHEME"
         - register_test_devices: "no"
         - apple_team_id: "$APPLE_TEAM_ID"
@@ -93,7 +106,7 @@ workflows:
         - api_key_issuer_id: "$ASC_ISSUER_ID"
     - xcode-archive@5:
         inputs:
-        - project_path: "$APP_FACTORY_PROJECT_PATH"
+        - project_path: "AtlasTome.xcodeproj"
         - scheme: "$APP_FACTORY_SCHEME"
         - distribution_method: "$BITRISE_DISTRIBUTION_METHOD"
         - automatic_code_signing: api-key
@@ -120,9 +133,17 @@ workflows:
   build_for_testing:
     steps:
     - git-clone@8: {}
+    - script@1:
+        title: CocoaPods install
+        inputs:
+        - content: |
+            #!/bin/bash
+            set -euo pipefail
+            cd "$BITRISE_SOURCE_DIR"
+            [ -f Podfile ] && pod install --repo-update
     - xcode-build-for-test@3:
         inputs:
-        - project_path: "$APP_FACTORY_PROJECT_PATH"
+        - project_path: "AtlasTome.xcodeproj"
         - scheme: "$APP_FACTORY_SCHEME"
         - destination: generic/platform=iOS Simulator
         - cache_level: none
@@ -142,9 +163,17 @@ workflows:
       the test results.
     steps:
     - git-clone@8: {}
+    - script@1:
+        title: CocoaPods install
+        inputs:
+        - content: |
+            #!/bin/bash
+            set -euo pipefail
+            cd "$BITRISE_SOURCE_DIR"
+            [ -f Podfile ] && pod install --repo-update
     - xcode-test@6:
         inputs:
-        - project_path: "$APP_FACTORY_PROJECT_PATH"
+        - project_path: "AtlasTome.xcodeproj"
         - scheme: "$APP_FACTORY_SCHEME"
         - test_repetition_mode: retry_on_failure
         - cache_level: none
